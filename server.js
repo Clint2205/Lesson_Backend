@@ -63,9 +63,51 @@ app.get('/collections/:collectionName/:id'
             res.send(results);
         });
     });
-    app.post("/", function(req, res) {
-        res.send("a POST request? Let's create a new element");
-       });
+app.post('/collections/:collectionName', function (req, res, next) {
+    const collectionName = req.params.collectionName;
+    const newElement = req.body;
+
+    req.collection = getDB().collection(collectionName);
+
+    req.collection.insertOne(newElement, function (err, result) {
+        if (err) {
+            return next(err);
+        }
+
+        res.send(result);
+    });
+});
+
+// Update a document by ID
+app.put('/collections/:collectionName/:id', (req, res) => {
+
+    
+    req.collection.updateOne(filter, update), { _id: new ObjectId(req.params.id) }, { $set: req.body }, function (err, results) {
+        if (err) {
+            return next(err);
+        }
+        res.send(results);
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+
+        res.json({ message: 'Document updated successfully' });
+    }
+});
+
+app.delete('/collections/:collectionName/:id'
+    , function (req, res, next) {
+        req.collection.deleteOne({ _id: new ObjectId(req.params.id) }, function (err, results) {
+            if (err) {
+                return next(err);
+            }
+            res.send(results);
+        });
+    });
+
+app.put("/", function (req, res) {
+    res.send("Ok, let's change an element");
+});
 
 
 app.use(function (req, res) {
