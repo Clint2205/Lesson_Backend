@@ -78,22 +78,7 @@ app.post('/collections/:collectionName', function (req, res, next) {
     });
 });
 
-// Update a document by ID
-app.put('/collections/:collectionName/:id', (req, res) => {
 
-    
-    req.collection.updateOne(filter, update), { _id: new ObjectId(req.params.id) }, { $set: req.body }, function (err, results) {
-        if (err) {
-            return next(err);
-        }
-        res.send(results);
-        if (result.matchedCount === 0) {
-            return res.status(404).json({ error: 'Document not found' });
-        }
-
-        res.json({ message: 'Document updated successfully' });
-    }
-});
 
 app.delete('/collections/:collectionName/:id'
     , function (req, res, next) {
@@ -105,9 +90,25 @@ app.delete('/collections/:collectionName/:id'
         });
     });
 
-app.put("/", function (req, res) {
-    res.send("Ok, let's change an element");
+// Update a document by ID
+app.put('/collections/:collectionName/:id', function (req, res, next) {
+    req.collection.updateOne(
+        { _id: new ObjectId(req.params.id) }, // filter
+        { $set: req.body }, // update
+        function (err, result) {
+            if (err) {
+                return next(err);
+            }
+
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ error: 'Document not found' });
+            }
+
+            res.json({ message: 'Document updated successfully' });
+        }
+    );
 });
+;
 
 
 app.use(function (req, res) {
