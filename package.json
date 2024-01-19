@@ -1,0 +1,28 @@
+{
+  "name": "lesson_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Clint2205/lesson-app-backend.git"
+  },
+  "author": " (Clint Muzanenhamo)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Clint2205/lesson-app-backend/issues"
+  },
+  "homepage": "https://github.com/Clint2205/lesson-app-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongodb": "^4.12.1",
+    "morgan": "^1.10.0",
+    "properties-reader": "^2.3.0"
+  }
+}
