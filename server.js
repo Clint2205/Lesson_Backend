@@ -90,25 +90,39 @@ app.delete('/collections/:collectionName/:id'
         });
     });
 
-// Update a document by ID
-app.put('/collections/:collectionName/:id', function (req, res, next) {
-    req.collection.updateOne(
-        { _id: new ObjectId(req.params.id) }, // filter
-        { $set: req.body }, // update
-        function (err, result) {
-            if (err) {
-                return next(err);
-            }
 
-            if (result.matchedCount === 0) {
-                return res.status(404).json({ error: 'Document not found' });
-            }
+// If the lessonIDs and spaces are provided,filter based on lesson IDs and
+//update spaces field in the products collection.
+// Handle updating available spaces in the products table
+app.put('/collections/:collectionName', function (req, res, next) {
+    const lessonIDs = req.body.lessonIDs;
+    const spaces = req.body.spaces;
 
-            res.json({ message: 'Document updated successfully' });
-        }
-    );
+    if (lessonIDs !== undefined && spaces !== undefined) {
+
+        req.collection.updateOne(
+            { lesson_id: { $in: lessonIDs } },
+            { $set: { spaces: parseInt(spaces) } },
+            function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+                res.json({ message: "Spaces updated successfully in the products collection" });
+                console.log(" Updated Result:", result);
+            }
+        );
+    } else if (result.matchedCount === 0) {
+        res.json({ message: "Invalid lesson IDs or spaces provided for update" });
+    }
 });
-;
+
+
+
+
+
+
+
+
 
 
 app.use(function (req, res) {
