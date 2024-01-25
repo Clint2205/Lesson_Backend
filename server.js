@@ -6,7 +6,7 @@ const { ObjectId } = require('mongodb');
 const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 
 const app = express();
@@ -42,7 +42,6 @@ app.param('collectionName', function (req, res, next, collectionName) {
     req.collection = getDB().collection(collectionName);
     return next();
 });
-
 app.get('/collections/:collectionName'
     , function (req, res, next) {
         console.log('Request received for collection:', req.params.collectionName);
@@ -54,6 +53,10 @@ app.get('/collections/:collectionName'
             console.log(results);
         });
     });
+
+
+
+
 app.get('/collections/:collectionName/:id'
     , function (req, res, next) {
         req.collection.findOne({ _id: new ObjectId(req.params.id) }, function (err, results) {
@@ -115,12 +118,6 @@ app.put('/collections/:collectionName', function (req, res, next) {
         res.json({ message: "Invalid lesson IDs or spaces provided for update" });
     }
 });
-
-
-
-
-
-
 
 
 
