@@ -61,8 +61,10 @@ app.get("/search/collections/:collectionName/:query", (req, res) => {
     req.collection.find({
         $or: [
             { subject: { $regex: searchTerm, $options: 'i' } },
-            { location: { $regex: searchTerm, $options: 'i' } }
+            { location: { $regex: searchTerm, $options: 'i' } },
+            
         ]
+        
     }).toArray((err, searchResults) => {
         if (err) {
             console.error("Error during search:", err);

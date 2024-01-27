@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const path = require('path');
 const propertiesReader = require('properties-reader');
 
@@ -13,7 +13,7 @@ const dbPrefix = properties.get('db.prefix');
 const dbUsername = encodeURIComponent(properties.get('db.user'));
 const dbPwd = encodeURIComponent(properties.get('db.pwd'));
 const dbName = properties.get('db.dbName');
-const dbUrl = properties.get('db.Url'); // Corrected the property name
+const dbUrl = properties.get('db.Url'); 
 const dbParams = properties.get('db.params');
 
 // Constructing the MongoDB URI
