@@ -16,7 +16,7 @@ const dbName = properties.get('db.dbName');
 const dbUrl = properties.get('db.Url'); // Corrected the property name
 const dbParams = properties.get('db.params');
 
-// Construct the MongoDB URI
+// Constructing the MongoDB URI
 const uri = `${dbPrefix}${dbUsername}:${dbPwd}${dbUrl}${dbParams}`;
 
 
@@ -31,6 +31,7 @@ async function connectToMongoDB() {
     console.error('Error connecting to MongoDB:', error);
   }
 }
+
 
 // New method to get the database instance
 

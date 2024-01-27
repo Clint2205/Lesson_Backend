@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const { connectToMongoDB, getDB } = require('./mongoDB');
 const { ObjectId } = require('mongodb');
-
 const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
@@ -42,6 +41,37 @@ app.param('collectionName', function (req, res, next, collectionName) {
     req.collection = getDB().collection(collectionName);
     return next();
 });
+
+app.get('/search/collections/:collectionName/:query', (req, res) => {
+   
+    const collectionName = req.params.collectionName;
+    req.collection = getDB().collection(collectionName);
+    console.log('collectionName:', collectionName);
+
+    const searchTerm = req.params.query;
+
+   
+    if (!req.collection) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    req.collection.find({
+        $or: [
+            { subject: { $regex: searchTerm, $options: 'i' } },
+            { location: { $regex: searchTerm, $options: 'i' } }
+        ]
+    }).toArray((err, searchResults) => {
+        if (err) {
+            console.error('Error during search:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.json(searchResults);
+    });
+});
+
+
+
 app.get('/collections/:collectionName'
     , function (req, res, next) {
         console.log('Request received for collection:', req.params.collectionName);
@@ -53,6 +83,33 @@ app.get('/collections/:collectionName'
             console.log(results);
         });
     });
+
+// Example route setup
+app.get('/collections/products/search/:query', (req, res) => {
+    const searchTerm = req.params.query;
+    console.log('req.collection:', req.collection);
+
+    // Make sure req.collection is properly set using the middleware or other means.
+    if (!req.collection) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    req.collection.find({
+        $text: { $search: searchTerm }
+    }).toArray((err, searchResults) => {
+        if (err) {
+            console.error('Error during search:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.json(searchResults);
+    });
+});
+
+
+
+
+
 
 
 
@@ -118,6 +175,17 @@ app.put('/collections/:collectionName', function (req, res, next) {
         res.json({ message: "Invalid lesson IDs or spaces provided for update" });
     }
 });
+// app.get('/collections/products',  function (req, res, next) {
+//     try {
+//       console.log('Request received for collection:', req.params.collectionName);
+//       const results =  req.collection.find({}).toArray();
+//       res.send(results);
+//       console.log(results);
+//     } catch (error) {
+//       console.error('Error in /collections/:collectionName:', error);
+//       res.status(500).send('Internal Server Error');
+//     }
+//   });
 
 
 
