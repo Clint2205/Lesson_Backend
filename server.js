@@ -63,6 +63,9 @@ app.get("/search/collections/:collectionName/:query", (req, res) => {
             { subject: { $regex: searchTerm, $options: 'i' } },
             { location: { $regex: searchTerm, $options: 'i' } },
             
+            
+            
+            
         ]
         
     }).toArray((err, searchResults) => {
@@ -106,9 +109,11 @@ app.post("/collections/:collectionName", function (req, res, next) {
     const newElement = req.body;
     const collectionName = req.params.collectionName;
 
+
     req.collection = getDB().collection(collectionName);
 
     req.collection.insertOne(newElement, function (err, result) {
+        
         if (err) {
             return next(err);
         }
